@@ -5,24 +5,18 @@
     <title>Caixa</title>
     <script>
         let notas = [100, 50, 20, 10, 5, 2];
-        let quot = (dividendo, divisor) => {
-            return Math.floor(dividendo / divisor);
-        }
-        let div = (dividendo, divisor) => {
-            return dividendo % divisor;
-        }
         let saque = (valor) => {
             let {quantidades, resto} = notas.reduce(
                 ({resto, quantidades}, nota) => {
-                    if (resto == 0) {
+                    if (resto === 0) {
                         return {
                             resto: resto,
                             quantidades: quantidades
                         };
                     }
                     return {
-                        resto: div(valor, nota),
-                        quantidades: {...quantidades, [nota]: quot(resto, nota)}
+                        resto: resto % nota,
+                        quantidades: {...quantidades, [nota]: Math.floor(resto / nota)}
                     };
                 },
                 {
@@ -30,7 +24,7 @@
                     quantidades: {}
                 }
             );
-            if (resto != 0) {
+            if (resto !== 0) {
                 throw new Error(`Você não pode sacar ${valor} pois sobra  ${resto}`);
             }
             return quantidades;
