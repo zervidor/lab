@@ -38,12 +38,17 @@
 
         let sacar = (event) => {
             event.preventDefault();
-            let resultado = saque(event.target.elements["valor"].valueAsNumber);
             let el = document.getElementById("notas");
-            el.textContent = Object.entries(resultado)
-                .filter(([nota, quantidade]) => quantidade > 0)
-                .map(([nota, quantidade]) => `${quantidade} nota${quantidade > 1 ? 's' : ''} de ${nota}`)
-                .join(", ");
+            try {
+                let resultado = saque(event.target.elements["valor"].valueAsNumber);
+                el.textContent = Object.entries(resultado)
+                    .filter(([nota, quantidade]) => quantidade > 0)
+                    .map(([nota, quantidade]) => `${quantidade} nota${quantidade > 1 ? 's' : ''} de ${nota}`)
+                    .join(", ");
+            } catch (ex) {
+                el.textContent = ex.message;
+            }
+
             return 0;
         }
     </script>
