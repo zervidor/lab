@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Caixa</title>
+    <script>
+        let notas = [100, 50, 20, 10, 5, 2];
+        let quot = (dividendo, divisor) => {
+            return Math.floor(dividendo / divisor);
+        }
+        let div = (dividendo, divisor) => {
+            return dividendo % divisor;
+        }
+        let saque = (valor) => {
+            let {quantidades, resto} = notas.reduce(
+                ({resto, quantidades}, nota) => {
+                    if (resto == 0) {
+                        return {
+                            resto: resto,
+                            quantidades: quantidades
+                        };
+                    }
+                    return {
+                        resto: div(valor, nota),
+                        quantidades: {...quantidades, [nota]: quot(resto, nota)}
+                    };
+                },
+                {
+                    resto: valor,
+                    quantidades: {}
+                }
+            );
+            if (resto != 0) {
+                throw new Error(`Você não pode sacar ${valor} pois sobra  ${resto}`);
+            }
+            return quantidades;
+        }
+
+        let sacar = (event) => {
+            event.preventDefault();
+            let resultado = saque(event.target.elements["valor"].valueAsNumber);
+            let el = document.getElementById("notas");
+            el.textContent = Object.entries(resultado)
+                .filter(([nota, quantidade]) => quantidade > 0)
+                .map(([nota, quantidade]) => `${quantidade} nota${quantidade > 1 ? 's' : ''} de ${nota}`)
+                .join(", ");
+            return 0;
+        }
+    </script>
+</head>
+<body>
+<form onsubmit="sacar(event)">
+    <label>
+        Valor:
+        <input type="number"
+               name="valor">
+    </label>
+</form>
+<output id="notas"></output>
+</body>
+</html>
